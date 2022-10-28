@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "502775771934",
+    "project_id": "stockode-6db09",
+    "storage_bucket": "stockode-6db09.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502775771934:android:f482c6ebfcb87f0fd70f0f",
+        "android_client_info": {
+          "package_name": "com.example.stockode"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502775771934-qe6njcqscb1eo4m6ei0qcs35j465aok4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxsLXj2keRiI_sO3lI0XJOMqLpAmW6auU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502775771934-qe6njcqscb1eo4m6ei0qcs35j465aok4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentInicio">
+
+    <fragment
+        android:id="@+id/fragmentHome"
+        android:name="com.example.stockode.Fragments.FragmentHome"
+        android:label="fragment_home_fragment"
+        tools:layout="@layout/fragment_home_fragment" >
+        <action
+            android:id="@+id/action_fragmentHome_to_stock"
+            app:destination="@id/stock" />
+        <action
+            android:id="@+id/action_fragmentHome_to_informacion"
+            app:destination="@id/informacion" />
+        <action
+            android:id="@+id/action_fragmentHome_to_scanner"
+            app:destination="@id/scanner" />
+    </fragment>
+    <fragment
+        android:id="@+id/informacion"
+        android:name="com.example.stockode.Fragments.FragmentInfromacion"
+        android:label="informacion_fragment"
+        tools:layout="@layout/informacion_fragment" >
+        <action
+            android:id="@+id/action_informacion_to_ingreso"
+            app:destination="@id/ingreso" />
+        <action
+            android:id="@+id/action_informacion_to_retiro"
+            app:destination="@id/retiro" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="description"
+            app:argType="string" />
+        <argument
+            android:name="NombreImg"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_informacion_to_stock"
+            app:destination="@id/stock" />
+    </fragment>
+    <fragment
+        android:id="@+id/ingreso"
+        android:name="com.example.stockode.Fragments.FragmentIngreso"
+        android:label="ingreso_fragment"
+        tools:layout="@layout/ingreso_fragment" >
+        <argument android:name="nombreImg"
+            app:argType="string" />
+        <argument android:name="cantidad"
+            app:argType="string" />
+        <argument
+            android:name="producto"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_ingreso_to_stock"
+            app:destination="@id/stock" />
+    </fragment>
+    <fragment
+        android:id="@+id/scanner"
+        android:name="com.example.stockode.Fragments.FragmentScanner"
+        android:label="scanner_fragment"
+        tools:layout="@layout/scanner_fragment" />
+    <fragment
+        android:id="@+id/retiro"
+        android:name="com.example.stockode.Fragments.FragmentRetiro"
+        android:label="retiro_fragment"
+        tools:layout="@layout/retiro_fragment" >
+        <argument
+            android:name="nombreImg"
+            app:argType="string" />
+        <argument
+            android:name="cantidad"
+            app:argType="string" />
+        <argument
+            android:name="producto"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_retiro_to_stock"
+            app:destination="@id/stock" />
+    </fragment>
+    <fragment
+        android:id="@+id/stock"
+        android:name="com.example.stockode.Fragments.FragmentStock"
+        android:label="stock_fragment"
+        tools:layout="@layout/stock_fragment" >
+        <action
+            android:id="@+id/action_stock_to_informacion"
+            app:destination="@id/informacion" />
+        <action
+            android:id="@+id/action_stock_to_fragmentAgregar"
+            app:destination="@id/fragmentAgregar" />
+        <action
+            android:id="@+id/action_stock_to_fragmentEliminar"
+            app:destination="@id/fragmentEliminar" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentInicio"
+        android:name="com.example.stockode.Fragments.FragmentInicio"
+        android:label="fragment_inicio_fragment"
+        tools:layout="@layout/fragment_inicio_fragment" >
+        <action
+            android:id="@+id/action_fragmentInicio_to_fragmentHome"
+            app:destination="@id/fragmentHome" />
+        <action
+            android:id="@+id/action_fragmentInicio_to_fragmentRegister"
+            app:destination="@id/fragmentRegister" />
+        <action
+            android:id="@+id/action_fragmentInicio_to_fragmentResetPassword"
+            app:destination="@id/fragmentResetPassword" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentRegister"
+        android:name="com.example.stockode.Fragments.fragmentRegister"
+        android:label="fragment_register_fragment"
+        tools:layout="@layout/fragment_register_fragment" >
+        <action
+            android:id="@+id/action_fragmentRegister_to_fragmentInicio"
+            app:destination="@id/fragmentInicio" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentResetPassword"
+        android:name="com.example.stockode.Fragments.FragmentResetPassword"
+        android:label="fragment_fragment_reset_password"
+        tools:layout="@layout/fragment_fragment_reset_password" />
+    <fragment
+        android:id="@+id/fragmentAgregar"
+        android:name="com.example.stockode.Fragments.FragmentAgregar"
+        android:label="fragment_fragment_agregar"
+        tools:layout="@layout/fragment_fragment_agregar" >
+        <action
+            android:id="@+id/action_fragmentAgregar_to_stock"
+            app:destination="@id/stock" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentEliminar"
+        android:name="com.example.stockode.Fragments.FragmentEliminar"
+        android:label="fragment_fragment_eliminar"
+        tools:layout="@layout/fragment_fragment_eliminar" />
+</navigation>
