@@ -88,9 +88,11 @@ class FragmentAgregar : Fragment() {
                     .addOnFailureListener { e ->
                         Log.d(ContentValues.TAG, "Error writing document", e)
                     }
-            } else if (Objeto.text.toString().isEmpty()) {
+            }
+            if (Objeto.text.toString().isEmpty()) {
                 Objeto.setError("Campo vacío")
-            } else if (Descripcion.text.toString().isEmpty()) {
+            }
+            if (Descripcion.text.toString().isEmpty()) {
                 Descripcion.setError("Campo vacío")
             }
         }

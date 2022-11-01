@@ -12,8 +12,7 @@
         tools:layout="@layout/fragment_home_fragment" >
         <action
             android:id="@+id/action_fragmentHome_to_stock"
-            app:destination="@id/stock"
-            app:popUpTo="@id/fragmentHome" />
+            app:destination="@id/stock" />
         <action
             android:id="@+id/action_fragmentHome_to_informacion"
             app:destination="@id/informacion" />
@@ -91,8 +90,7 @@
         tools:layout="@layout/stock_fragment" >
         <action
             android:id="@+id/action_stock_to_informacion"
-            app:destination="@id/informacion"
-            app:popUpTo="@id/stock" />
+            app:destination="@id/informacion" />
         <action
             android:id="@+id/action_stock_to_fragmentAgregar"
             app:destination="@id/fragmentAgregar" />
