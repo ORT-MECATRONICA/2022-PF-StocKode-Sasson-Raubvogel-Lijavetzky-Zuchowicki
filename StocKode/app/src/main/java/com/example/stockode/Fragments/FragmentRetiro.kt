@@ -39,10 +39,10 @@ class FragmentRetiro : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.retiro_fragment, container, false)
-        imgProducto = v.findViewById(R.id.imgProductoRet)
         cantRetirada = v.findViewById(R.id.editTextCantidadRet)
-        cantStock = v.findViewById(R.id.CantStock2)
         btnRetirar = v.findViewById(R.id.btnRetirar)
+        imgProducto = v.findViewById(R.id.imgProductoRet)
+        cantStock = v.findViewById(R.id.CantStock2)
         return v
     }
 
@@ -63,12 +63,13 @@ class FragmentRetiro : Fragment() {
         }
 
         btnRetirar.setOnClickListener {
-            val cantidadRet = cantRetirada.text.toString()
-            if (cantidadRet.isNotEmpty()){
-                var resultado = cantidad - cantidadRet.toInt()
+            val cantidadRet = cantRetirada.text.toString().toInt()
+            var resultado = cantidad - cantidadRet
+            if (cantidadRet.toString().isNotEmpty()){
+
                 if (resultado < 0) {
                     resultado = 0}
-                db.collection("Productos").document(producto).update("description",resultado).addOnCompleteListener {
+                db.collection("Productos").document(producto).update("description",resultado.toString()).addOnCompleteListener {
                     if (it.isSuccessful){
                         val action = FragmentRetiroDirections.actionRetiroToStock()
                         v.findNavController().navigate(action)

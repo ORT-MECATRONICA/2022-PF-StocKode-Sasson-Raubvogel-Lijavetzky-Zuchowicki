@@ -37,6 +37,7 @@ class FragmentHome : Fragment() {
             .setPrompt("Scan QR Code")
             .initiateScan()
 
+
     }
 
     override fun onActivityResult(
