@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 class FragmentAgregar : Fragment() {
 
@@ -41,6 +42,7 @@ class FragmentAgregar : Fragment() {
 
     private lateinit var ImageUri: Uri
 
+    private var cantidad: Int = 0
     private lateinit var Objeto: EditText
     private lateinit var Descripcion: EditText
     private lateinit var btnCrearClase: Button
@@ -68,12 +70,19 @@ class FragmentAgregar : Fragment() {
             Select()
         }
         btnCrearClase.setOnClickListener {
+
+            db.collection("productos").get().addOnSuccessListener { cantidadProducos->
+                for (documents in cantidadProducos){
+                    cantidad = cantidad + 1
+                }
+            }
             if (Objeto.text.toString().isNotEmpty() && Descripcion.text.toString().isNotEmpty() && Seleccionado) {
                 Upload()
                 var objeto = hashMapOf(
                     "title" to Objeto.text.toString().trim(),
                     "description" to Descripcion.text.toString().trim(),
-                    "nombreImg" to "imagen " + Objeto.text.toString().trim()
+                    "nombreImg" to "imagen " + Objeto.text.toString().trim(),
+                    "numero" to cantidad
                 )
                 db.collection("Productos").document(Objeto.text.toString().trim())
                     .set(objeto)
