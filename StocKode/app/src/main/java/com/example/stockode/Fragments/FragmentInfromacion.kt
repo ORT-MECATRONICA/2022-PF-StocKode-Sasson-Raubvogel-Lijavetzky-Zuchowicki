@@ -1,32 +1,48 @@
 package com.example.stockode.Fragments
 
+import android.R.attr
+import android.R.attr.bitmap
 import android.app.AlertDialog
+import android.app.ProgressDialog
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.stockode.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import java.io.ByteArrayOutputStream
 import java.io.File
+
 
 class FragmentInfromacion : Fragment() {
 
-    lateinit var v: View
-    lateinit var btnIrAIngreso: Button
-    lateinit var btnIrARetiro: Button
-    lateinit var txtProducto: TextView
-    lateinit var txtCantidad: TextView
+    private lateinit var v: View
+    private lateinit var btnIrAIngreso: Button
+    private lateinit var btnIrARetiro: Button
+    private lateinit var txtProducto: TextView
+    private lateinit var txtCantidad: TextView
     private lateinit var builder: AlertDialog.Builder
-    lateinit var imagen: ImageView
-    lateinit var Borrar: ImageView
+    private lateinit var imagen: ImageView
+    private lateinit var Borrar: ImageView
+    private lateinit var descargar: TextView
+
+    private var Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
+    private var Cantidad = FragmentInfromacionArgs.fromBundle(requireArguments()).description
+    private var Orden = FragmentInfromacionArgs.fromBundle(requireArguments()).orden
+
+    private lateinit var ImageUri: Uri
 
     private var db = Firebase.firestore
 
@@ -42,16 +58,14 @@ class FragmentInfromacion : Fragment() {
         imagen = v.findViewById(R.id.imagenProducto)
         Borrar = v.findViewById(R.id.btnEliminar)
         builder = AlertDialog.Builder(requireContext())
+        descargar = v.findViewById(R.id.descargarQR)
         return v
     }
 
     override fun onStart() {
         super.onStart()
 
-        val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
         txtProducto.text = Nombre
-
-        val Cantidad = FragmentInfromacionArgs.fromBundle(requireArguments()).description
         txtCantidad.text = Cantidad
 
         var imageName = FragmentInfromacionArgs.fromBundle(requireArguments()).nombreImg
@@ -66,13 +80,42 @@ class FragmentInfromacion : Fragment() {
         }.addOnFailureListener {
         }
 
+        descargar.setOnClickListener {
+            try {
+                var barcodeEncoder: BarcodeEncoder = BarcodeEncoder()
+                var bitmap: Bitmap = barcodeEncoder.encodeBitmap(
+                    Orden,
+                    BarcodeFormat.QR_CODE,
+                    300,
+                    300
+                )
+                //codigoQr.setImageBitmap(bitmap)
+                val fileName = "QR " + Nombre
+                val storageReference = FirebaseStorage.getInstance().getReference("QR/$fileName")
+
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                val image: ByteArray = stream.toByteArray()
+
+                storageReference.putBytes(image).addOnSuccessListener {
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
         btnIrAIngreso.setOnClickListener {
-            val actionInfoIngreso = FragmentInfromacionDirections.actionInformacionToIngreso(imageName,Cantidad,Nombre)
+            val actionInfoIngreso = FragmentInfromacionDirections.actionInformacionToIngreso(
+                imageName,
+                Cantidad,
+                Nombre
+            )
             v.findNavController().navigate(actionInfoIngreso)
         }
 
         btnIrARetiro.setOnClickListener {
-            val actionInfoRetiro = FragmentInfromacionDirections.actionInformacionToRetiro(imageName,Cantidad,Nombre)
+            val actionInfoRetiro =
+                FragmentInfromacionDirections.actionInformacionToRetiro(imageName, Cantidad, Nombre)
             v.findNavController().navigate(actionInfoRetiro)
         }
         Borrar.setOnClickListener {
@@ -88,7 +131,7 @@ class FragmentInfromacion : Fragment() {
                         FirebaseStorage.getInstance().getReference("images/$fileName")
                     storageReference.delete()
                 }
-                .setNegativeButton("No"){dialogInterface, It->
+                .setNegativeButton("No") { dialogInterface, It ->
                     dialogInterface.cancel()
                 }.show()
         }

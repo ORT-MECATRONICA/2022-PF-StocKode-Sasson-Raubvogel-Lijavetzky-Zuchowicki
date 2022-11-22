@@ -43,6 +43,8 @@
         <action
             android:id="@+id/action_informacion_to_stock"
             app:destination="@id/stock" />
+        <argument android:name="Orden"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/ingreso"
