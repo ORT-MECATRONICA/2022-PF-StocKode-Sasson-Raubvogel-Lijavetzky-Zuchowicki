@@ -70,12 +70,10 @@ class FragmentAgregar : Fragment() {
             Select()
         }
         btnCrearClase.setOnClickListener {
-
-            db.collection("productos").get().addOnSuccessListener { cantidadProducos->
-                for (documents in cantidadProducos){
+            db.collection("Productos").get().addOnSuccessListener {
+                for (documents in it){
                     cantidad = cantidad + 1
                 }
-            }
             if (Objeto.text.toString().isNotEmpty() && Descripcion.text.toString().isNotEmpty() && Seleccionado) {
                 Upload()
                 var objeto = hashMapOf(
@@ -103,6 +101,7 @@ class FragmentAgregar : Fragment() {
             }
             if (Descripcion.text.toString().isEmpty()) {
                 Descripcion.setError("Campo vacío")
+            }
             }
         }
     }
