@@ -1,32 +1,40 @@
 package com.example.stockode.Fragments
 
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.AlertDialog
+import android.app.DownloadManager
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.stockode.R
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
+import java.util.jar.Manifest
+
 
 class FragmentInfromacion : Fragment() {
 
-    lateinit var v: View
-    lateinit var btnIrAIngreso: Button
-    lateinit var btnIrARetiro: Button
-    lateinit var txtProducto: TextView
-    lateinit var txtCantidad: TextView
+    private lateinit var v: View
+    private lateinit var btnIrAIngreso: Button
+    private lateinit var btnIrARetiro: Button
+    private lateinit var txtProducto: TextView
+    private lateinit var txtCantidad: TextView
     private lateinit var builder: AlertDialog.Builder
-    lateinit var imagen: ImageView
-    lateinit var Borrar: ImageView
+    private lateinit var imagen: ImageView
+    private lateinit var Borrar: ImageView
+    private lateinit var descargarQR: TextView
 
     private var db = Firebase.firestore
 
@@ -42,11 +50,14 @@ class FragmentInfromacion : Fragment() {
         imagen = v.findViewById(R.id.imagenProducto)
         Borrar = v.findViewById(R.id.btnEliminar)
         builder = AlertDialog.Builder(requireContext())
+        descargarQR = v.findViewById(R.id.descargarQR)
         return v
     }
 
     override fun onStart() {
         super.onStart()
+
+        var manager: DownloadManager
 
         val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
         txtProducto.text = Nombre
@@ -64,6 +75,15 @@ class FragmentInfromacion : Fragment() {
             imagen.setImageBitmap(bitmap)
 
         }.addOnFailureListener {
+        }
+
+        descargarQR.setOnClickListener {
+            /*var fileName = "QR " + Nombre
+            val storageRef = FirebaseStorage.getInstance().getReference().child("QR/$fileName")
+            val localFile = File.createTempFile("images", "jpg")
+            storageRef.getFile(localFile).addOnSuccessListener {
+                Snackbar.make(v,fileName,Snackbar.LENGTH_SHORT).show()
+            }*/
         }
 
         btnIrAIngreso.setOnClickListener {
