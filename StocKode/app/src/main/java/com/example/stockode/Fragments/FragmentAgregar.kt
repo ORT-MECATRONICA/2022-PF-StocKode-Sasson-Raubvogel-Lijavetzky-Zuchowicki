@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -19,9 +20,14 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import com.example.stockode.R
 import com.example.stockode.entities.Producto
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
+import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -37,6 +43,7 @@ class FragmentAgregar : Fragment() {
     lateinit var v: View
 
     val db = Firebase.firestore
+    private lateinit var dbRef: DatabaseReference
 
     var lista: MutableList<Producto> = ArrayList()
 
@@ -71,38 +78,66 @@ class FragmentAgregar : Fragment() {
         }
         btnCrearClase.setOnClickListener {
             db.collection("Productos").get().addOnSuccessListener {
-                for (documents in it){
+                for (documents in it) {
                     cantidad = cantidad + 1
                 }
-            if (Objeto.text.toString().isNotEmpty() && Descripcion.text.toString().isNotEmpty() && Seleccionado) {
-                Upload()
-                var objeto = hashMapOf(
-                    "title" to Objeto.text.toString().trim(),
-                    "description" to Descripcion.text.toString().trim(),
-                    "nombreImg" to "imagen " + Objeto.text.toString().trim(),
-                    "numero" to cantidad
-                )
-                db.collection("Productos").document(Objeto.text.toString().trim())
-                    .set(objeto)
-                    .addOnCompleteListener {
-                        if (it.isSuccessful) {
-                            Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
-                            val actionVolverStock =
-                                FragmentAgregarDirections.actionFragmentAgregarToStock()
-                            v.findNavController().navigate(actionVolverStock)
+                if (Objeto.text.toString().isNotEmpty() && Descripcion.text.toString()
+                        .isNotEmpty() && Seleccionado
+                ) {
+                    Upload()
+                    var objeto = hashMapOf(
+                        "title" to Objeto.text.toString().trim(),
+                        "description" to Descripcion.text.toString().trim(),
+                        "nombreImg" to "imagen " + Objeto.text.toString().trim(),
+                        "numero" to cantidad.toString()
+                    )
+                    db.collection("Productos").document(Objeto.text.toString().trim())
+                        .set(objeto)
+                        .addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                Log.d(ContentValues.TAG, "DocumentSnapshot successfully written!")
+                                val actionVolverStock =
+                                    FragmentAgregarDirections.actionFragmentAgregarToStock()
+                                v.findNavController().navigate(actionVolverStock)
+                            }
                         }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.d(ContentValues.TAG, "Error writing document", e)
-                    }
+                        .addOnFailureListener { e ->
+                            Log.d(ContentValues.TAG, "Error writing document", e)
+                        }
+                }
+                if (Objeto.text.toString().isEmpty()) {
+                    Objeto.setError("Campo vacío")
+                }
+                if (Descripcion.text.toString().isEmpty()) {
+                    Descripcion.setError("Campo vacío")
+                }
             }
-            if (Objeto.text.toString().isEmpty()) {
-                Objeto.setError("Campo vacío")
+            val database = Firebase.database
+            val myRef = database.getReference("message")
+
+            try {
+                var barcodeEncoder: BarcodeEncoder = BarcodeEncoder()
+                var bitmap: Bitmap = barcodeEncoder.encodeBitmap(
+                    cantidad.toString(),
+                    BarcodeFormat.QR_CODE,
+                    300,
+                    300
+                )
+
+                val fileName = "QR " + Objeto.text.toString().trim()
+                val storageReference = FirebaseStorage.getInstance().getReference("QR/$fileName")
+
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+                val image: ByteArray = stream.toByteArray()
+
+                storageReference.putBytes(image).addOnSuccessListener {
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            if (Descripcion.text.toString().isEmpty()) {
-                Descripcion.setError("Campo vacío")
-            }
-            }
+
         }
     }
 
