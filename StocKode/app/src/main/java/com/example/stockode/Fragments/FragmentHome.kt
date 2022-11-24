@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentIntegrator.*
 import kotlin.properties.Delegates
 
 class FragmentHome : Fragment() {
@@ -40,9 +41,13 @@ class FragmentHome : Fragment() {
         return v
     }
 
+    companion object {
+        fun newInstance(): FragmentHome = FragmentHome()
+    }
+
     private fun setUpQrCode() {
-        IntentIntegrator(requireActivity())
-            .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        forSupportFragment(FragmentHome)
+            .setDesiredBarcodeFormats(QR_CODE)
             .setTorchEnabled(false)
             .setBeepEnabled(false)
             .setPrompt("Scan QR Code")
@@ -55,7 +60,7 @@ class FragmentHome : Fragment() {
         resultCode: Int,
         data: Intent?
     ) {
-        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        val result = parseActivityResult(requestCode, resultCode, data)
 
         if (result != null) {
             if (result.contents != null) {
