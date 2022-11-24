@@ -64,8 +64,9 @@ class FragmentStock : Fragment() {
                     for (document in dataSnapshot) {
                         val Recycler = Producto(
                             title = document.get("title") as String,
-                            document.get("description") as String,
-                            document.get("nombreImg") as String
+                            description = document.get("description") as String,
+                            NombreImg = document.get("nombreImg") as String,
+                            numero = document.get("numero") as String
                         )
                         Log.d("Test", "DocumentSnapshot data: ${Recycler.toString()}")
                         lista.add(Recycler)
@@ -87,7 +88,8 @@ class FragmentStock : Fragment() {
         val action = FragmentStockDirections.actionStockToInformacion(
             lista[pos].title,
             lista[pos].description,
-            lista[pos].NombreImg
+            lista[pos].NombreImg,
+            lista[pos].numero
         )
         v.findNavController().navigate(action)
     }

@@ -1,4 +1,4 @@
 package com.example.stockode.entities
 
-class Producto(var title: String, var description: String, var NombreImg: String) {
+class Producto(var title: String, var description: String, var NombreImg: String, var numero: String) {
 }

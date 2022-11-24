@@ -7,12 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.navigation.findNavController
 import com.example.stockode.R
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -26,8 +26,9 @@ class FragmentIngreso : Fragment() {
 
     private lateinit var viewModel: FragmentIngresoViewModel
 
-    private lateinit var v:View
+    private lateinit var v: View
     private var db = Firebase.firestore
+    private lateinit var database: DatabaseReference
 
     private lateinit var cantidadIng: EditText
     private lateinit var btnIngresar: Button
@@ -48,6 +49,7 @@ class FragmentIngreso : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        val numero = FragmentIngresoArgs.fromBundle(requireArguments()).numero
         val producto = FragmentIngresoArgs.fromBundle(requireArguments()).producto
         val cantidad = FragmentIngresoArgs.fromBundle(requireArguments()).cantidad.toInt()
         textCant.text = cantidad.toString()
@@ -64,13 +66,21 @@ class FragmentIngreso : Fragment() {
 
 
         btnIngresar.setOnClickListener {
-            val valorIng = cantidadIng.text.toString().toInt()
-            val nuevoValor = cantidad + valorIng
-            if (cantidadIng.text.toString().isNotEmpty()) {
-                db.collection("Productos").document(producto)
-                    .update("description", nuevoValor.toString())
-                val action = FragmentIngresoDirections.actionIngresoToStock()
-                v.findNavController().navigate(action)
+            database = FirebaseDatabase.getInstance().getReference("test")
+            database.child("flag").setValue(1).addOnSuccessListener {
+                Snackbar.make(v, "Retire los elementos del lugar indicado", Snackbar.LENGTH_SHORT)
+                    .show()
+                database.child("int").setValue(numero.toInt())
+                val valorIng = cantidadIng.text.toString().toInt()
+                val nuevoValor = cantidad + valorIng
+                if (cantidadIng.text.toString().isNotEmpty()) {
+                    db.collection("Productos").document(producto)
+                        .update("description", nuevoValor.toString())
+                    val action = FragmentIngresoDirections.actionIngresoToStock()
+                    v.findNavController().navigate(action)
+                }
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(), "Failed", Toast.LENGTH_SHORT).show()
             }
         }
     }

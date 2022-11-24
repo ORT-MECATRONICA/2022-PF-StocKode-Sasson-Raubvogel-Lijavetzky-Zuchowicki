@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.stockode.R
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -38,6 +39,7 @@ class FragmentInfromacion : Fragment() {
 
     private var db = Firebase.firestore
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,6 +60,8 @@ class FragmentInfromacion : Fragment() {
         super.onStart()
 
         var manager: DownloadManager
+
+        var numero = FragmentInfromacionArgs.fromBundle(requireArguments()).numero
 
         val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
         txtProducto.text = Nombre
@@ -87,12 +91,12 @@ class FragmentInfromacion : Fragment() {
         }
 
         btnIrAIngreso.setOnClickListener {
-            val actionInfoIngreso = FragmentInfromacionDirections.actionInformacionToIngreso(imageName,Cantidad,Nombre)
+            val actionInfoIngreso = FragmentInfromacionDirections.actionInformacionToIngreso(imageName,Cantidad,Nombre, numero)
             v.findNavController().navigate(actionInfoIngreso)
         }
 
         btnIrARetiro.setOnClickListener {
-            val actionInfoRetiro = FragmentInfromacionDirections.actionInformacionToRetiro(imageName,Cantidad,Nombre)
+            val actionInfoRetiro = FragmentInfromacionDirections.actionInformacionToRetiro(imageName,Cantidad,Nombre, numero)
             v.findNavController().navigate(actionInfoRetiro)
         }
         Borrar.setOnClickListener {

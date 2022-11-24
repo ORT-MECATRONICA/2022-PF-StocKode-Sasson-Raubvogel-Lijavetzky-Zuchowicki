@@ -8,13 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.navigation.findNavController
 import com.example.stockode.R
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -32,7 +31,9 @@ class FragmentRetiro : Fragment() {
     private lateinit var cantStock: TextView
     private lateinit var cantRetirada: EditText
     private lateinit var btnRetirar: Button
+
     private val db = Firebase.firestore
+    private lateinit var database: DatabaseReference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +49,8 @@ class FragmentRetiro : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+        val numero = FragmentIngresoArgs.fromBundle(requireArguments()).numero
         val producto = FragmentIngresoArgs.fromBundle(requireArguments()).producto
         val cantidad = FragmentIngresoArgs.fromBundle(requireArguments()).cantidad.toInt()
         cantStock.text = cantidad.toString()
@@ -63,6 +66,10 @@ class FragmentRetiro : Fragment() {
         }
 
         btnRetirar.setOnClickListener {
+            database = FirebaseDatabase.getInstance().getReference("test")
+            database.child("flag").setValue(3).addOnSuccessListener {
+                Snackbar.make(v, "Ponga los elementos en el lugar indicado", Snackbar.LENGTH_SHORT).show()
+                database.child("int").setValue(numero.toInt())
             val cantidadRet = cantRetirada.text.toString()
             if (cantidadRet.isNotEmpty()){
                 var resultado = cantidad - cantidadRet.toInt()
@@ -72,8 +79,11 @@ class FragmentRetiro : Fragment() {
                     if (it.isSuccessful){
                         val action = FragmentRetiroDirections.actionRetiroToStock()
                         v.findNavController().navigate(action)
+                        }
                     }
                 }
+            }.addOnFailureListener {
+                Toast.makeText(requireContext(),"Failed",Toast.LENGTH_SHORT).show()
             }
         }
     }
