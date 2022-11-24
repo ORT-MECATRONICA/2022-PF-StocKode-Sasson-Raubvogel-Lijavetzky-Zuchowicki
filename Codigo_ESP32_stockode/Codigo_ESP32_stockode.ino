@@ -37,8 +37,8 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(2, PIN, NEO_GRB + NEO_KHZ800);
 #include "addons/RTDBHelper.h"
 
 // Insert your network credentials
-#define WIFI_SSID "casacamargo2.4"
-#define WIFI_PASSWORD "0052462857"
+#define WIFI_SSID "ORT-IoT"
+#define WIFI_PASSWORD "OrtIOTnew22$2"
 
 // Insert Firebase project API Key
 #define API_KEY "AIzaSyBxsLXj2keRiI_sO3lI0XJOMqLpAmW6auU"

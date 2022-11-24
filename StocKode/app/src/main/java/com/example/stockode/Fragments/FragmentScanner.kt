@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.example.stockode.R
 import com.google.zxing.integration.android.IntentIntegrator
 
@@ -44,7 +45,7 @@ class FragmentScanner : Fragment() {
         if (result != null) {
             if (result.contents != null) {
                 // El contenido de cada escaneo se mostrará en un textView
-                Toast.makeText(requireContext(), result.contents, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(requireContext(), result.contents, Toast.LENGTH_SHORT).show()
                 //val actionScannerToInformacion = FragmentScannerDirections.actionScannerToInformacion()
                 //v.findNavController().navigate(actionScannerToInformacion)
             } else {

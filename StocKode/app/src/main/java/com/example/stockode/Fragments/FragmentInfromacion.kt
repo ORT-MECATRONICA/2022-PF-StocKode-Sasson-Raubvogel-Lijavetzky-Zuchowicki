@@ -111,6 +111,11 @@ class FragmentInfromacion : Fragment() {
                     val storageReference =
                         FirebaseStorage.getInstance().getReference("images/$fileName")
                     storageReference.delete()
+
+                    val fileNameQR = "QR " + Nombre
+                    val storageReferenceQR =
+                        FirebaseStorage.getInstance().getReference("QR/$fileNameQR")
+                    storageReferenceQR.delete()
                 }
                 .setNegativeButton("No"){dialogInterface, It->
                     dialogInterface.cancel()

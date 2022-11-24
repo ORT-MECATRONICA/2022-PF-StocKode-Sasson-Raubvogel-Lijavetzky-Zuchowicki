@@ -16,9 +16,6 @@
         <action
             android:id="@+id/action_fragmentHome_to_informacion"
             app:destination="@id/informacion" />
-        <action
-            android:id="@+id/action_fragmentHome_to_scanner"
-            app:destination="@id/scanner" />
     </fragment>
     <fragment
         android:id="@+id/informacion"
@@ -66,11 +63,6 @@
             android:name="numero"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/scanner"
-        android:name="com.example.stockode.Fragments.FragmentScanner"
-        android:label="scanner_fragment"
-        tools:layout="@layout/scanner_fragment" />
     <fragment
         android:id="@+id/retiro"
         android:name="com.example.stockode.Fragments.FragmentRetiro"
