@@ -67,7 +67,7 @@ class FragmentIngreso : Fragment() {
 
         btnIngresar.setOnClickListener {
             database = FirebaseDatabase.getInstance().getReference("test")
-            database.child("flag").setValue(1).addOnSuccessListener {
+            database.child("flag").setValue(true).addOnSuccessListener {
                 Snackbar.make(v, "Retire los elementos del lugar indicado", Snackbar.LENGTH_SHORT)
                     .show()
                 database.child("int").setValue(numero.toInt())

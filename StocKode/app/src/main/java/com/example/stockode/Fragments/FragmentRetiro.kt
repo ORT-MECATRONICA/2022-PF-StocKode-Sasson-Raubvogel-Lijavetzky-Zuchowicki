@@ -67,7 +67,7 @@ class FragmentRetiro : Fragment() {
 
         btnRetirar.setOnClickListener {
             database = FirebaseDatabase.getInstance().getReference("test")
-            database.child("flag").setValue(3).addOnSuccessListener {
+            database.child("flag").setValue(true).addOnSuccessListener {
                 Snackbar.make(v, "Ponga los elementos en el lugar indicado", Snackbar.LENGTH_SHORT).show()
                 database.child("int").setValue(numero.toInt())
             val cantidadRet = cantRetirada.text.toString()
