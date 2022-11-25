@@ -3,16 +3,21 @@ package com.example.stockode.Fragments
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.AlertDialog
 import android.app.DownloadManager
+import android.app.DownloadManager.Request
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.stockode.R
@@ -38,6 +43,9 @@ class FragmentInfromacion : Fragment() {
     private lateinit var descargarQR: TextView
 
     private var db = Firebase.firestore
+
+    private var dataUrl: String = ""
+    private val REQ_CODE = 100
 
 
     override fun onCreateView(
@@ -88,15 +96,27 @@ class FragmentInfromacion : Fragment() {
             storageRef.getFile(localFile).addOnSuccessListener {
                 Snackbar.make(v,fileName,Snackbar.LENGTH_SHORT).show()
             }*/
+
+            download()
         }
 
         btnIrAIngreso.setOnClickListener {
-            val actionInfoIngreso = FragmentInfromacionDirections.actionInformacionToIngreso(imageName,Cantidad,Nombre, numero)
+            val actionInfoIngreso = FragmentInfromacionDirections.actionInformacionToIngreso(
+                imageName,
+                Cantidad,
+                Nombre,
+                numero
+            )
             v.findNavController().navigate(actionInfoIngreso)
         }
 
         btnIrARetiro.setOnClickListener {
-            val actionInfoRetiro = FragmentInfromacionDirections.actionInformacionToRetiro(imageName,Cantidad,Nombre, numero)
+            val actionInfoRetiro = FragmentInfromacionDirections.actionInformacionToRetiro(
+                imageName,
+                Cantidad,
+                Nombre,
+                numero
+            )
             v.findNavController().navigate(actionInfoRetiro)
         }
         Borrar.setOnClickListener {
@@ -117,9 +137,30 @@ class FragmentInfromacion : Fragment() {
                         FirebaseStorage.getInstance().getReference("QR/$fileNameQR")
                     storageReferenceQR.delete()
                 }
-                .setNegativeButton("No"){dialogInterface, It->
+                .setNegativeButton("No") { dialogInterface, It ->
                     dialogInterface.cancel()
                 }.show()
         }
+    }
+
+    private fun download() {
+        val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
+        val storageReference = FirebaseStorage.getInstance().getReference("QR/$Nombre")
+        storageReference.downloadUrl.addOnSuccessListener {
+            val url = it.toString()
+            downloadFiles(requireContext(), "QR " + Nombre, ".JPEG",DIRECTORY_DOWNLOADS, url)
+        }.addOnFailureListener {
+            Snackbar.make(v,it.toString(),Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun downloadFiles(context: Context, fileName: String, fileExtension: String, destinationDirectory:String, url:String){
+        val uri = Uri.parse(url)
+        var downloadmanager : DownloadManager  =  requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+        DownloadManager.Request(uri).setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        DownloadManager.Request(uri).setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension)
+
+        downloadmanager.enqueue(DownloadManager.Request(uri))
     }
 }

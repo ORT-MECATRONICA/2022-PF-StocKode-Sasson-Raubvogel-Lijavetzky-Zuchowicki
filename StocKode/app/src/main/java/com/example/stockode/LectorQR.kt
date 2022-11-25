@@ -72,24 +72,6 @@ class LectorQR : AppCompatActivity() {
 
         if (result != null) {
             if (result.contents != null) {
-                // El contenido de cada escaneo se mostrará en un textView
-                //Toast.makeText(this, result.contents, Toast.LENGTH_SHORT).show()//binding.textView.text = result.contents
-
-                /*val mFragmentManager = supportFragmentManager
-                val mFragmentTransaction = mFragmentManager.beginTransaction()
-
-                val mBundle = Bundle()
-
-                var elemento = result.contents.toInt()
-                mBundle.putString(lista[elemento].title,null!!)
-                mBundle.putString(lista[elemento].description,null!!)
-                mBundle.putString(lista[elemento].NombreImg,null!!)
-
-
-                FragmentInfromacion().arguments = mBundle
-                mFragmentTransaction.add(R.id.frameLayout, FragmentInfromacion()).commit()*/
-                val fragmentTransaction = supportFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.lectorQr,FragmentInfromacion()).commit()
 
             }else{
                 Toast.makeText(this,"Cancelled", Toast.LENGTH_SHORT).show()

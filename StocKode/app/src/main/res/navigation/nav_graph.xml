@@ -95,9 +95,6 @@
         <action
             android:id="@+id/action_stock_to_fragmentAgregar"
             app:destination="@id/fragmentAgregar" />
-        <action
-            android:id="@+id/action_stock_to_fragmentEliminar"
-            app:destination="@id/fragmentEliminar" />
     </fragment>
     <fragment
         android:id="@+id/fragmentInicio"
@@ -137,9 +134,4 @@
             android:id="@+id/action_fragmentAgregar_to_stock"
             app:destination="@id/stock" />
     </fragment>
-    <fragment
-        android:id="@+id/fragmentEliminar"
-        android:name="com.example.stockode.Fragments.FragmentEliminar"
-        android:label="fragment_fragment_eliminar"
-        tools:layout="@layout/fragment_fragment_eliminar" />
 </navigation>

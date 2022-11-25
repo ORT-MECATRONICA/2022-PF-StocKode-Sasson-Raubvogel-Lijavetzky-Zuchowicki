@@ -14,6 +14,7 @@ import androidx.navigation.findNavController
 import com.example.stockode.R
 import com.example.stockode.entities.Producto
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.zxing.integration.android.IntentIntegrator
@@ -46,8 +47,8 @@ class FragmentHome : Fragment() {
     }
 
     private fun setUpQrCode() {
-        forSupportFragment(FragmentHome)
-            .setDesiredBarcodeFormats(QR_CODE)
+        IntentIntegrator.forSupportFragment(this)
+            .setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
             .setTorchEnabled(false)
             .setBeepEnabled(false)
             .setPrompt("Scan QR Code")
@@ -55,6 +56,7 @@ class FragmentHome : Fragment() {
 
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(
         requestCode: Int,
         resultCode: Int,
@@ -67,57 +69,55 @@ class FragmentHome : Fragment() {
                 viewModel.detectado = true
                 viewModel.lectura = result.contents.toInt()
             } else {
-                Toast.makeText(requireContext(), "Cancelled", Toast.LENGTH_SHORT).show()
+                super.onActivityResult(requestCode, resultCode, data)
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Snackbar.make(v,viewModel.lectura.toString(),Snackbar.LENGTH_SHORT).show()
-        var docRef = db.collection("Productos")
+        override fun onStart() {
+            super.onStart()
+            Snackbar.make(v, viewModel.lectura.toString(), Snackbar.LENGTH_SHORT).show()
+            var docRef = db.collection("Productos").orderBy("numero", Query.Direction.ASCENDING)
 
-        docRef.get()
-            .addOnSuccessListener { dataSnapshot ->
-                if (dataSnapshot != null) {
-                    for (document in dataSnapshot) {
-                        val Recycler = Producto(
-                            title = document.get("title") as String,
-                            document.get("description") as String,
-                            document.get("nombreImg") as String,
-                            document.get("numero") as String
-                        )
-                        Log.d("Test", "DocumentSnapshot data: ${Recycler.toString()}")
-                        lista.add(Recycler)
+            docRef.get()
+                .addOnSuccessListener { dataSnapshot ->
+                    if (dataSnapshot != null) {
+                        for (document in dataSnapshot) {
+                            val Recycler = Producto(
+                                title = document.get("title") as String,
+                                document.get("description") as String,
+                                document.get("nombreImg") as String,
+                                document.get("numero") as String
+                            )
+                            Log.d("Test", "DocumentSnapshot data: ${Recycler.toString()}")
+                            lista.add(Recycler)
+                        }
+                    } else {
+                        Log.d("Test", "No such document")
                     }
-                } else {
-                    Log.d("Test", "No such document")
                 }
+
+            if (viewModel.detectado == true) {
+                viewModel.detectado = false
+                val actionHomeToInformacion =
+                    FragmentHomeDirections.actionFragmentHomeToInformacion(
+                        lista[viewModel.lectura].title,
+                        lista[viewModel.lectura].description,
+                        lista[viewModel.lectura].NombreImg,
+                        lista[viewModel.lectura].numero
+                    )
+                v.findNavController().navigate(actionHomeToInformacion)
+                Snackbar.make(v, viewModel.lectura.toString(), Snackbar.LENGTH_SHORT).show()
+            }
+            btnScanner.setOnClickListener {
+                setUpQrCode()
             }
 
-        if(viewModel.detectado == true){
-            viewModel.detectado = false
-            val actionHomeToInformacion =
-                FragmentHomeDirections.actionFragmentHomeToInformacion(
-                    lista[viewModel.lectura].title,
-                    lista[viewModel.lectura].description,
-                    lista[viewModel.lectura].NombreImg,
-                    lista[viewModel.lectura].numero
-                )
-            v.findNavController().navigate(actionHomeToInformacion)
-            Snackbar.make(v,viewModel.lectura,Snackbar.LENGTH_SHORT).show()
+            btnStock.setOnClickListener {
+                val actionHomeStock = FragmentHomeDirections.actionFragmentHomeToStock()
+                v.findNavController().navigate(actionHomeStock)
+            }
         }
-        btnScanner.setOnClickListener {
-            setUpQrCode()
-        }
-
-        btnStock.setOnClickListener {
-            val actionHomeStock = FragmentHomeDirections.actionFragmentHomeToStock()
-            v.findNavController().navigate(actionHomeStock)
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
