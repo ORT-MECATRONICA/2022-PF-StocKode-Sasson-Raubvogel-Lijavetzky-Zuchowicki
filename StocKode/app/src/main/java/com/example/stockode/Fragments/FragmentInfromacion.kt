@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -144,23 +145,39 @@ class FragmentInfromacion : Fragment() {
     }
 
     private fun download() {
-        val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
-        val storageReference = FirebaseStorage.getInstance().getReference("QR/$Nombre")
-        storageReference.downloadUrl.addOnSuccessListener {
-            val url = it.toString()
-            downloadFiles(requireContext(), "QR " + Nombre, ".JPEG",DIRECTORY_DOWNLOADS, url)
-        }.addOnFailureListener {
-            Snackbar.make(v,it.toString(),Snackbar.LENGTH_SHORT).show()
+            val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
+            val storageReference =
+                FirebaseStorage.getInstance().getReference("QR/" + "QR " + "$Nombre")
+            storageReference.downloadUrl.addOnSuccessListener {
+                val url = it.toString()
+                downloadFiles(requireContext(), "QR " + Nombre, "PNG", DIRECTORY_DOWNLOADS, url)
+            }.addOnFailureListener {
+                Snackbar.make(v, it.toString(), Snackbar.LENGTH_SHORT).show()
         }
     }
 
-    private fun downloadFiles(context: Context, fileName: String, fileExtension: String, destinationDirectory:String, url:String){
+    private fun downloadFiles(
+        context: Context,
+        fileName: String,
+        fileExtension: String,
+        destinationDirectory: String,
+        url: String
+    ) {
         val uri = Uri.parse(url)
-        var downloadmanager : DownloadManager  =  requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
+        var downloadmanager: DownloadManager =
+            requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
-        DownloadManager.Request(uri).setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        DownloadManager.Request(uri).setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension)
+        Request(uri).setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
+        Request(uri).setTitle("Descarga QR $Nombre")
+        Request(uri).allowScanningByMediaScanner()
+        Request(uri).setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        Request(uri).setDestinationInExternalFilesDir(
+            context,
+            destinationDirectory,
+            fileName + fileExtension
+        )
 
-        downloadmanager.enqueue(DownloadManager.Request(uri))
+        downloadmanager.enqueue(Request(uri))
     }
 }
