@@ -43,6 +43,9 @@
         <argument
             android:name="numero"
             app:argType="string" />
+        <action
+            android:id="@+id/action_informacion_to_fragmentQR"
+            app:destination="@id/fragmentQR" />
     </fragment>
     <fragment
         android:id="@+id/ingreso"
@@ -133,5 +136,13 @@
         <action
             android:id="@+id/action_fragmentAgregar_to_stock"
             app:destination="@id/stock" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentQR"
+        android:name="com.example.stockode.Fragments.FragmentQR"
+        android:label="fragment_fragment_q_r"
+        tools:layout="@layout/fragment_fragment_q_r" >
+        <argument android:name="Nombre"
+            app:argType="string" />
     </fragment>
 </navigation>

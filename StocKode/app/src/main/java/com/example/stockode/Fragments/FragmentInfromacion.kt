@@ -91,14 +91,8 @@ class FragmentInfromacion : Fragment() {
         }
 
         descargarQR.setOnClickListener {
-            /*var fileName = "QR " + Nombre
-            val storageRef = FirebaseStorage.getInstance().getReference().child("QR/$fileName")
-            val localFile = File.createTempFile("images", "jpg")
-            storageRef.getFile(localFile).addOnSuccessListener {
-                Snackbar.make(v,fileName,Snackbar.LENGTH_SHORT).show()
-            }*/
-
-            download()
+            val action = FragmentInfromacionDirections.actionInformacionToFragmentQR(Nombre)
+            v.findNavController().navigate(action)
         }
 
         btnIrAIngreso.setOnClickListener {
@@ -142,42 +136,5 @@ class FragmentInfromacion : Fragment() {
                     dialogInterface.cancel()
                 }.show()
         }
-    }
-
-    private fun download() {
-            val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
-            val storageReference =
-                FirebaseStorage.getInstance().getReference("QR/" + "QR " + "$Nombre")
-            storageReference.downloadUrl.addOnSuccessListener {
-                val url = it.toString()
-                downloadFiles(requireContext(), "QR " + Nombre, "PNG", DIRECTORY_DOWNLOADS, url)
-            }.addOnFailureListener {
-                Snackbar.make(v, it.toString(), Snackbar.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun downloadFiles(
-        context: Context,
-        fileName: String,
-        fileExtension: String,
-        destinationDirectory: String,
-        url: String
-    ) {
-        val uri = Uri.parse(url)
-        val Nombre = FragmentInfromacionArgs.fromBundle(requireArguments()).title
-        var downloadmanager: DownloadManager =
-            requireContext().getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-        Request(uri).setAllowedNetworkTypes(Request.NETWORK_WIFI or Request.NETWORK_MOBILE)
-        Request(uri).setTitle("Descarga QR $Nombre")
-        Request(uri).allowScanningByMediaScanner()
-        Request(uri).setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        Request(uri).setDestinationInExternalFilesDir(
-            context,
-            destinationDirectory,
-            fileName + fileExtension
-        )
-
-        downloadmanager.enqueue(Request(uri))
     }
 }
