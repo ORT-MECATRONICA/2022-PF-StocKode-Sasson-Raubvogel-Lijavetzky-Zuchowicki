@@ -29,7 +29,7 @@ int cuenta;
 
 // When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
 // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(2, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(10, PIN, NEO_GRB + NEO_KHZ800);
 
 //Provide the token generation process info.
 #include "addons/TokenHelper.h"
