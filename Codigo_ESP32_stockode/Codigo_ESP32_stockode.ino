@@ -25,7 +25,6 @@
 unsigned long checkpoint = 0;
 boolean flag = false;
 int flagCheckpoint = 0;
-int cuenta;
 
 // When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
 // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
