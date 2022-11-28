@@ -45,8 +45,6 @@ class FragmentAgregar : Fragment() {
     val db = Firebase.firestore
     private lateinit var dbRef: DatabaseReference
 
-    var lista: MutableList<Producto> = ArrayList()
-
     private lateinit var ImageUri: Uri
 
     private var cantidad: Int = 0
@@ -81,7 +79,7 @@ class FragmentAgregar : Fragment() {
                 for (documents in it) {
                     cantidad = cantidad + 1
                 }
-                try {
+                /*try {
                     var barcodeEncoder: BarcodeEncoder = BarcodeEncoder()
                     var bitmapGenerado: Bitmap = barcodeEncoder.encodeBitmap(
                         cantidad.toString(),
@@ -101,7 +99,7 @@ class FragmentAgregar : Fragment() {
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                }
+                }*/
 
                 if (Objeto.text.toString().isNotEmpty() && Descripcion.text.toString()
                         .isNotEmpty() && Seleccionado

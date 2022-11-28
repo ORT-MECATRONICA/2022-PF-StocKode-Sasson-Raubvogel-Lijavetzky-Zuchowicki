@@ -144,5 +144,8 @@
         tools:layout="@layout/fragment_fragment_q_r" >
         <argument android:name="Nombre"
             app:argType="string" />
+        <argument
+            android:name="Numero"
+            app:argType="string" />
     </fragment>
 </navigation>

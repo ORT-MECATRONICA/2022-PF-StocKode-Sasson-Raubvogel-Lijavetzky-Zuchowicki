@@ -1,5 +1,6 @@
 package com.example.stockode.Fragments
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -12,6 +13,8 @@ import android.widget.TextView
 import com.example.stockode.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
 import java.io.File
 
 class FragmentQR : Fragment() {
@@ -39,17 +42,21 @@ class FragmentQR : Fragment() {
     override fun onStart() {
         super.onStart()
         val Nombre = FragmentQRArgs.fromBundle(requireArguments()).nombre
+        val Numero = FragmentQRArgs.fromBundle(requireArguments()).numero
         nombreProducto.text = "QR del producto: " + Nombre
 
-        var imageName = "QR " + Nombre
-        val StorageRef = FirebaseStorage.getInstance().reference.child("QR/$imageName")
+        try {
+            var barcodeEncoder: BarcodeEncoder = BarcodeEncoder()
+            var bitmapGenerado: Bitmap = barcodeEncoder.encodeBitmap(
+                Numero,
+                BarcodeFormat.QR_CODE,
+                300,
+                300
+            )
+            qrProducto.setImageBitmap(bitmapGenerado)
 
-        val localfile = File.createTempFile("tempImage", "jpg")
-        StorageRef.getFile(localfile).addOnSuccessListener {
-            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
-            qrProducto.setImageBitmap(bitmap)
-        }.addOnFailureListener {
-            Snackbar.make(v,it.toString(), Snackbar.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

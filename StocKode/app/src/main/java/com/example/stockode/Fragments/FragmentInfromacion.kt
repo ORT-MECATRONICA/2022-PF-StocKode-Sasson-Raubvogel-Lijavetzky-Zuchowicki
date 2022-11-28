@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import androidx.core.content.ContextCompat.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.stockode.R
+import com.example.stockode.entities.Producto
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.ktx.firestore
@@ -44,6 +46,9 @@ class FragmentInfromacion : Fragment() {
     private lateinit var descargarQR: TextView
 
     private var db = Firebase.firestore
+
+    private var lista: MutableList<Producto> = ArrayList()
+    private var i: Int = -1
 
     private var dataUrl: String = ""
     private val REQ_CODE = 100
@@ -91,7 +96,7 @@ class FragmentInfromacion : Fragment() {
         }
 
         descargarQR.setOnClickListener {
-            val action = FragmentInfromacionDirections.actionInformacionToFragmentQR(Nombre)
+            val action = FragmentInfromacionDirections.actionInformacionToFragmentQR(Nombre, numero)
             v.findNavController().navigate(action)
         }
 
@@ -126,11 +131,6 @@ class FragmentInfromacion : Fragment() {
                     val storageReference =
                         FirebaseStorage.getInstance().getReference("images/$fileName")
                     storageReference.delete()
-
-                    val fileNameQR = "QR " + Nombre
-                    val storageReferenceQR =
-                        FirebaseStorage.getInstance().getReference("QR/$fileNameQR")
-                    storageReferenceQR.delete()
                 }
                 .setNegativeButton("No") { dialogInterface, It ->
                     dialogInterface.cancel()
