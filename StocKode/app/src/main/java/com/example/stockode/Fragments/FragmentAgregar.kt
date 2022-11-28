@@ -79,28 +79,6 @@ class FragmentAgregar : Fragment() {
                 for (documents in it) {
                     cantidad = cantidad + 1
                 }
-                /*try {
-                    var barcodeEncoder: BarcodeEncoder = BarcodeEncoder()
-                    var bitmapGenerado: Bitmap = barcodeEncoder.encodeBitmap(
-                        cantidad.toString(),
-                        BarcodeFormat.QR_CODE,
-                        300,
-                        300
-                    )
-
-                    val fileName = "QR " + Objeto.text.toString().trim()
-                    val storageReference = FirebaseStorage.getInstance().getReference("QR/$fileName")
-
-                    val stream = ByteArrayOutputStream()
-                    bitmapGenerado.compress(Bitmap.CompressFormat.JPEG, 90, stream)
-                    val image: ByteArray = stream.toByteArray()
-                    storageReference.putBytes(image).addOnSuccessListener {
-                    }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }*/
-
                 if (Objeto.text.toString().isNotEmpty() && Descripcion.text.toString()
                         .isNotEmpty() && Seleccionado
                 ) {
